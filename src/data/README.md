@@ -1,0 +1,1 @@
+Download from [here](https://www.kaggle.com/datasets/andrewmvd/lung-and-colon-cancer-histopathological-images)
