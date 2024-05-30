@@ -2,7 +2,7 @@
 Author: hibana2077 hibana2077@gmail.com
 Date: 2024-05-29 14:45:23
 LastEditors: hibana2077 hibana2077@gmail.com
-LastEditTime: 2024-05-29 15:09:15
+LastEditTime: 2024-05-30 20:06:56
 FilePath: \Lung-and-Colon-Cancer-Histopathological-Images-Challenge\src\main.py
 Description: 
 '''
@@ -25,7 +25,7 @@ from torchvision.datasets import ImageFolder
 data_dir = './data/lung_colon_image_set/lung_image_sets'
 
 data_transform = transforms.Compose([
-    transforms.Resize((224, 224)),
+    transforms.Resize((256, 256)),
     transforms.RandomHorizontalFlip(),
     transforms.ToTensor()
 ])
@@ -51,10 +51,12 @@ optimizer = tioptim.Lookahead(timm.optim.AdamW(model.parameters(), lr=1e-3))
 # train model
 num_epochs = 10
 loss_history = []
+acc_history = []
 
 for epoch in range(num_epochs):
     model.train()
     running_loss = []
+    running_corrects = 0
     for images, labels in tqdm(train_loader):
         images = images.to(device)
         labels = labels.to(device)
@@ -65,6 +67,13 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
 
+        # calculate accuracy
+        _, preds = torch.max(outputs, 1)
+        running_corrects += torch.sum(preds == labels.data)
+
+        # calculate loss
         running_loss.append(loss.item())
+
+    acc_history.append(running_corrects/len(train_dataset))
     loss_history.append(np.mean(running_loss))
-    print(f'Epoch {epoch+1}/{num_epochs} Loss: {np.mean(running_loss)}')
+    print(f'Epoch {epoch+1}/{num_epochs} Loss: {np.mean(running_loss):.4f} Acc: {running_corrects/len(train_dataset):.4f}')
