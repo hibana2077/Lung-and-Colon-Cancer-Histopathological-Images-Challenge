@@ -2,7 +2,7 @@
 Author: hibana2077 hibana2077@gmail.com
 Date: 2024-05-29 14:45:23
 LastEditors: hibana2077 hibana2077@gmail.com
-LastEditTime: 2024-05-30 20:06:56
+LastEditTime: 2024-06-02 18:53:16
 FilePath: \Lung-and-Colon-Cancer-Histopathological-Images-Challenge\src\main.py
 Description: 
 '''
@@ -77,3 +77,24 @@ for epoch in range(num_epochs):
     acc_history.append(running_corrects/len(train_dataset))
     loss_history.append(np.mean(running_loss))
     print(f'Epoch {epoch+1}/{num_epochs} Loss: {np.mean(running_loss):.4f} Acc: {running_corrects/len(train_dataset):.4f}')
+
+# test model
+
+model.eval()
+running_loss = []
+running_corrects = 0
+for images, labels in tqdm(test_loader):
+    images = images.to(device)
+    labels = labels.to(device)
+
+    outputs = model(images)
+    loss = criterion(outputs, labels)
+
+    # calculate accuracy
+    _, preds = torch.max(outputs, 1)
+    running_corrects += torch.sum(preds == labels.data)
+
+    # calculate loss
+    running_loss.append(loss.item())
+
+print(f'Test Loss: {np.mean(running_loss):.4f} Acc: {running_corrects/len(test_dataset):.4f}')
