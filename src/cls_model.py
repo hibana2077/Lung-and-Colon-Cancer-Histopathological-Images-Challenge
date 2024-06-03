@@ -2,7 +2,7 @@
 Author: hibana2077 hibana2077@gmail.com
 Date: 2024-05-29 14:45:23
 LastEditors: hibana2077 hibana2077@gmail.com
-LastEditTime: 2024-06-02 18:55:49
+LastEditTime: 2024-06-03 11:23:43
 FilePath: \Lung-and-Colon-Cancer-Histopathological-Images-Challenge\src\main.py
 Description: 
 '''
@@ -39,7 +39,7 @@ train_dataset, test_dataset = random_split(datasets, [train_size, test_size])
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=32, shuffle=True)
 
-model = timm.create_model('convnext_base', num_classes=2)
+model = timm.create_model('convnext_base', num_classes=3)
 
 # define loss function and optimizer
 
