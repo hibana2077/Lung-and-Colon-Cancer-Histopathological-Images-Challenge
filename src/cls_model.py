@@ -2,7 +2,7 @@
 Author: hibana2077 hibana2077@gmail.com
 Date: 2024-05-29 14:45:23
 LastEditors: hibana2077 hibana2077@gmail.com
-LastEditTime: 2024-06-03 11:23:43
+LastEditTime: 2024-06-03 15:14:03
 FilePath: \Lung-and-Colon-Cancer-Histopathological-Images-Challenge\src\main.py
 Description: 
 '''
@@ -21,6 +21,8 @@ from tqdm import tqdm
 from torch.utils.data import DataLoader,random_split
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
+
+from sklearn.metrics import confusion_matrix
 
 # load data 
 data_dir = './data/lung_colon_image_set/lung_image_sets'
@@ -84,12 +86,7 @@ for epoch in range(num_epochs):
 model.eval()
 running_loss = []
 running_corrects = 0
-cf = {
-    'tp': 0,
-    'tn': 0,
-    'fp': 0,
-    'fn': 0
-}
+cf = np.zeros((3, 3))
 for images, labels in tqdm(test_loader):
     images = images.to(device)
     labels = labels.to(device)
@@ -104,12 +101,15 @@ for images, labels in tqdm(test_loader):
     # calculate loss
     running_loss.append(loss.item())
 
+    # calculate confusion matrix
+    cf += confusion_matrix(labels.cpu().numpy(), preds.cpu().numpy(), labels=[0, 1, 2])
+
 print(f'Test Loss: {np.mean(running_loss):.4f} Acc: {running_corrects/len(test_dataset):.4f}')
-# print(f'Confusion Matrix: {cf}')
+print(f'Confusion Matrix: {cf}')
 
 # make plot (loss)
 
-plt.plot(loss_history)
+plt.plot(list(map(lambda x: x.cpu().numpy(), loss_history)))
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.title('Training Loss')
@@ -117,7 +117,7 @@ plt.savefig('loss.png')
 
 # make plot (accuracy)
 
-plt.plot(acc_history)
+plt.plot(list(map(lambda x: x.cpu().numpy(), acc_history)))
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
 plt.title('Training Accuracy')
