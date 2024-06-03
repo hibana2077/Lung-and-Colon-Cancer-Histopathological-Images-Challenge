@@ -101,22 +101,11 @@ for images, labels in tqdm(test_loader):
     _, preds = torch.max(outputs, 1)
     running_corrects += torch.sum(preds == labels.data)
 
-    # calculate confusion matrix
-    for i in range(len(preds)):
-        if preds[i] == 0 and labels[i] == 0:
-            cf['tp'] += 1
-        elif preds[i] == 0 and labels[i] == 1:
-            cf['fp'] += 1
-        elif preds[i] == 1 and labels[i] == 0:
-            cf['fn'] += 1
-        elif preds[i] == 1 and labels[i] == 1:
-            cf['tn'] += 1
-
     # calculate loss
     running_loss.append(loss.item())
 
 print(f'Test Loss: {np.mean(running_loss):.4f} Acc: {running_corrects/len(test_dataset):.4f}')
-print(f'Confusion Matrix: {cf}')
+# print(f'Confusion Matrix: {cf}')
 
 # make plot (loss)
 
