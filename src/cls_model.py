@@ -2,7 +2,7 @@
 Author: hibana2077 hibana2077@gmail.com
 Date: 2024-05-29 14:45:23
 LastEditors: hibana2077 hibana2077@gmail.com
-LastEditTime: 2024-06-03 15:14:03
+LastEditTime: 2024-06-03 16:31:54
 FilePath: \Lung-and-Colon-Cancer-Histopathological-Images-Challenge\src\main.py
 Description: 
 '''
@@ -16,6 +16,8 @@ import timm
 import timm.optim as tioptim
 import matplotlib.pyplot as plt
 import os
+import time
+import json
 
 from tqdm import tqdm
 from torch.utils.data import DataLoader,random_split
@@ -23,6 +25,9 @@ from torchvision import transforms
 from torchvision.datasets import ImageFolder
 
 from sklearn.metrics import confusion_matrix
+
+# time start
+start_time = time.time()
 
 # load data 
 data_dir = './data/lung_colon_image_set/lung_image_sets'
@@ -106,19 +111,28 @@ for images, labels in tqdm(test_loader):
 
 print(f'Test Loss: {np.mean(running_loss):.4f} Acc: {running_corrects/len(test_dataset):.4f}')
 print(f'Confusion Matrix: {cf}')
+print(f'Elapsed Time: {time.time()-start_time:.2f}s')
 
-# make plot (loss)
+# save acc and loss to json file
+with open('acc_loss.json', 'w') as f:
+    json.dump({'acc': acc_history, 'loss': loss_history}, f)
 
-plt.plot(list(map(lambda x: x.cpu().numpy(), loss_history)))
-plt.xlabel('Epoch')
-plt.ylabel('Loss')
-plt.title('Training Loss')
-plt.savefig('loss.png')
+# save model
+dummy_input = torch.randn(1, 3, 256, 256).to(device)
+torch.onnx.export(model, dummy_input, 'model.onnx')
 
-# make plot (accuracy)
+# # make plot (loss)
 
-plt.plot(list(map(lambda x: x.cpu().numpy(), acc_history)))
-plt.xlabel('Epoch')
-plt.ylabel('Accuracy')
-plt.title('Training Accuracy')
-plt.savefig('accuracy.png')
+# plt.plot(list(map(lambda x: x.cpu().numpy(), loss_history)))
+# plt.xlabel('Epoch')
+# plt.ylabel('Loss')
+# plt.title('Training Loss')
+# plt.savefig('loss.png')
+
+# # make plot (accuracy)
+
+# plt.plot(list(map(lambda x: x.cpu().numpy(), acc_history)))
+# plt.xlabel('Epoch')
+# plt.ylabel('Accuracy')
+# plt.title('Training Accuracy')
+# plt.savefig('accuracy.png')
