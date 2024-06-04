@@ -134,3 +134,5 @@ plt.title('Accuracy')
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
 plt.savefig('accuracy.png')
+
+print('Done')
