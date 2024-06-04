@@ -2,7 +2,7 @@
 Author: hibana2077 hibana2077@gmail.com
 Date: 2024-05-29 14:45:23
 LastEditors: hibana2077 hibana2077@gmail.com
-LastEditTime: 2024-06-04 17:10:45
+LastEditTime: 2024-06-04 21:40:34
 FilePath: \Lung-and-Colon-Cancer-Histopathological-Images-Challenge\src\main.py
 Description: 
 '''
@@ -117,22 +117,20 @@ print(f'Elapsed Time: {time.time()-start_time:.2f}s')
 dummy_input = torch.randn(1, 3, 256, 256).to(device)
 torch.onnx.export(model, dummy_input, 'model.onnx')
 
-# save acc and loss to json file
-with open('acc_loss.json', 'w') as f:
-    json.dump({'acc': acc_history, 'loss': loss_history}, f)
+# make plot (loss)
 
-# # make plot (loss)
+plt.figure()
+plt.plot(loss_history)
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.title('Training Loss')
+plt.savefig('loss.png')
 
-# plt.plot(list(map(lambda x: x.cpu().numpy(), loss_history)))
-# plt.xlabel('Epoch')
-# plt.ylabel('Loss')
-# plt.title('Training Loss')
-# plt.savefig('loss.png')
+# make plot (accuracy)
 
-# # make plot (accuracy)
-
-# plt.plot(list(map(lambda x: x.cpu().numpy(), acc_history)))
-# plt.xlabel('Epoch')
-# plt.ylabel('Accuracy')
-# plt.title('Training Accuracy')
-# plt.savefig('accuracy.png')
+plt.figure()
+plt.plot(list(map(lambda x: x.cpu().item(), acc_history)))
+plt.title('Accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.savefig('accuracy.png')
