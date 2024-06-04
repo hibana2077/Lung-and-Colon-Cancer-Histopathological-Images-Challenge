@@ -2,7 +2,7 @@
 Author: hibana2077 hibana2077@gmail.com
 Date: 2024-05-29 14:45:23
 LastEditors: hibana2077 hibana2077@gmail.com
-LastEditTime: 2024-06-03 16:31:54
+LastEditTime: 2024-06-04 17:10:45
 FilePath: \Lung-and-Colon-Cancer-Histopathological-Images-Challenge\src\main.py
 Description: 
 '''
@@ -113,13 +113,13 @@ print(f'Test Loss: {np.mean(running_loss):.4f} Acc: {running_corrects/len(test_d
 print(f'Confusion Matrix: {cf}')
 print(f'Elapsed Time: {time.time()-start_time:.2f}s')
 
-# save acc and loss to json file
-with open('acc_loss.json', 'w') as f:
-    json.dump({'acc': acc_history, 'loss': loss_history}, f)
-
 # save model
 dummy_input = torch.randn(1, 3, 256, 256).to(device)
 torch.onnx.export(model, dummy_input, 'model.onnx')
+
+# save acc and loss to json file
+with open('acc_loss.json', 'w') as f:
+    json.dump({'acc': acc_history, 'loss': loss_history}, f)
 
 # # make plot (loss)
 
