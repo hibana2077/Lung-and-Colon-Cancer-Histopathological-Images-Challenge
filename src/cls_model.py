@@ -57,7 +57,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = tioptim.Lookahead(timm.optim.AdamW(model.parameters(), lr=1e-3))
 
 # train model
-num_epochs = 10
+num_epochs = 12
 loss_history = []
 acc_history = []
 
@@ -113,9 +113,14 @@ print(f'Test Loss: {np.mean(running_loss):.4f} Acc: {running_corrects/len(test_d
 print(f'Confusion Matrix: {cf}')
 print(f'Elapsed Time: {time.time()-start_time:.2f}s')
 
-# save model
+# save model (onnx)
 dummy_input = torch.randn(1, 3, 256, 256).to(device)
 torch.onnx.export(model, dummy_input, 'model.onnx')
+print('ONNX model saved')
+
+# save model (pth)
+torch.save(model, 'model.pth')
+print('Torch model saved')
 
 # make plot (loss)
 
