@@ -162,3 +162,5 @@ cython_debug/
 src/data/
 src/model.onnx
 src/model.pth
+src/train_features.csv
+src/test_features.csv
