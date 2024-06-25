@@ -77,7 +77,7 @@ for epoch in range(num_epochs):
         # calculate loss
         running_loss.append(loss.item())
 
-    acc_history.append(running_corrects/len(train_dataset))
+    acc_history.append((running_corrects/len(train_dataset)).item())
     loss_history.append(np.mean(running_loss))
     print(f'Epoch {epoch+1}/{num_epochs} Train Loss: {np.mean(running_loss):.4f} Train Acc: {running_corrects/len(train_dataset):.4f}', end=' ')
 
@@ -97,7 +97,7 @@ for epoch in range(num_epochs):
         # calculate loss
         running_test_loss.append(loss.item())
 
-    test_acc_history.append(running_test_corrects/len(test_dataset))
+    test_acc_history.append((running_test_corrects/len(test_dataset)).item())
     test_loss_history.append(np.mean(running_test_loss))
     print(f'Test Loss: {np.mean(running_test_loss):.4f} Test Acc: {running_test_corrects/len(test_dataset):.4f}')
 
