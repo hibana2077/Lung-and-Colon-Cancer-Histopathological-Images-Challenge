@@ -52,6 +52,8 @@ optimizer = tioptim.Lookahead(timm.optim.AdamW(model.parameters(), lr=1e-3))
 num_epochs = 12
 loss_history = []
 acc_history = []
+test_loss_history = []
+test_acc_history = []
 
 for epoch in range(num_epochs):
     model.train()
@@ -76,7 +78,27 @@ for epoch in range(num_epochs):
 
     acc_history.append(running_corrects/len(train_dataset))
     loss_history.append(np.mean(running_loss))
-    print(f'Epoch {epoch+1}/{num_epochs} Loss: {np.mean(running_loss):.4f} Acc: {running_corrects/len(train_dataset):.4f}')
+    print(f'Epoch {epoch+1}/{num_epochs} Loss: {np.mean(running_loss):.4f} Acc: {running_corrects/len(train_dataset):.4f}', end=' ')
+
+    running_test_loss = []
+    running_test_corrects = 0
+    for images, labels in test_loader:
+        images = images.to(device)
+        labels = labels.to(device)
+
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+
+        # calculate accuracy
+        _, preds = torch.max(outputs, 1)
+        running_test_corrects += torch.sum(preds == labels.data)
+
+        # calculate loss
+        running_test_loss.append(loss.item())
+
+    test_acc_history.append(running_test_corrects/len(test_dataset))
+    test_loss_history.append(np.mean(running_test_loss))
+    print(f'Test Loss: {np.mean(running_test_loss):.4f} Acc: {running_test_corrects/len(test_dataset):.4f}')
 
 # test model
 
