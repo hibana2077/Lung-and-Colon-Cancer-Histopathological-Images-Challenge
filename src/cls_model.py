@@ -38,7 +38,8 @@ train_dataset, test_dataset = random_split(datasets, [train_size, test_size])
 train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=16, shuffle=True)
 
-model = timm.create_model('convnext_base', num_classes=3)
+# model = timm.create_model('convnext_base', num_classes=3)
+model = timm.create_model('resnet50', num_classes=3)
 
 # define loss function and optimizer
 
@@ -136,22 +137,16 @@ print('ONNX model saved')
 torch.save(model, 'model.pth')
 print('Torch model saved')
 
-# make plot (loss)
+# make plot of loss and accuracy
 
 plt.figure()
-plt.plot(loss_history)
-plt.xlabel('Epoch')
-plt.ylabel('Loss')
-plt.title('Training Loss')
+plt.plot(loss_history, label='train loss', color='red')
+plt.plot(test_loss_history, label='test loss', color='blue')
+plt.legend()
 plt.savefig('loss.png')
 
-# make plot (accuracy)
-
 plt.figure()
-plt.plot(list(map(lambda x: x.cpu().item(), acc_history)))
-plt.title('Accuracy')
-plt.xlabel('Epoch')
-plt.ylabel('Accuracy')
-plt.savefig('accuracy.png')
-
-print('Done')
+plt.plot(acc_history, label='train acc', color='red')
+plt.plot(test_acc_history, label='test acc', color='blue')
+plt.legend()
+plt.savefig('acc.png')
