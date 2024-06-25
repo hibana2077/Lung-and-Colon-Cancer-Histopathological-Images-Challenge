@@ -1,11 +1,3 @@
-'''
-Author: hibana2077 hibana2077@gmail.com
-Date: 2024-05-29 14:45:23
-LastEditors: hibana2077 hibana2077@gmail.com
-LastEditTime: 2024-06-04 21:40:34
-FilePath: \Lung-and-Colon-Cancer-Histopathological-Images-Challenge\src\main.py
-Description: 
-'''
 import numpy as np
 import timm.optim
 import torch
@@ -30,7 +22,7 @@ from sklearn.metrics import confusion_matrix
 start_time = time.time()
 
 # load data 
-data_dir = './data/lung_colon_image_set/lung_image_sets'
+data_dir = '/mnt/sda/lung_colon_image_set/lung_image_sets'
 
 data_transform = transforms.Compose([
     transforms.Resize((256, 256)),
@@ -43,8 +35,8 @@ train_size = int(0.8 * len(datasets))
 test_size = len(datasets) - train_size
 train_dataset, test_dataset = random_split(datasets, [train_size, test_size])
 
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=32, shuffle=True)
+train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=16, shuffle=True)
 
 model = timm.create_model('convnext_base', num_classes=3)
 
