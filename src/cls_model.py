@@ -138,8 +138,8 @@ torch.save(model, 'model.pth')
 print('Torch model saved')
 
 # loss and accuracy history convert to list from tensor (GPU)
-loss_history = [x.item().cpu().numpy() for x in loss_history]
-acc_history = [x.item().cpu().numpy() for x in acc_history]
+loss_history = [float(x) for x in loss_history]
+acc_history = [float(x) for x in acc_history]
 
 # make plot of loss and accuracy
 
