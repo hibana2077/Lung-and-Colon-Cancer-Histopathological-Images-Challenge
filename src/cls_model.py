@@ -134,7 +134,7 @@ torch.onnx.export(model, dummy_input, 'model.onnx')
 print('ONNX model saved')
 
 # save model (pth)
-torch.save(model, 'model.pth')
+torch.save(model, 'teacher_model.pth')
 print('Torch model saved')
 
 # loss and accuracy history convert to list from tensor (GPU)
